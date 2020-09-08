@@ -1,0 +1,24 @@
+version: "3"
+services:
+  app_db:
+    image: mongo:3.2
+    command: mongod --smallfiles
+    volumes:
+      - ./mongodb:/data/db
+    ports:
+      - 27017:27017
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file: 
+      - .env
+    volumes:
+      - .:/src
+      - .:/node_modules
+    command: "yarn start"
+    ports:
+      - 3000:3000
+    depends_on:
+      - app_db
